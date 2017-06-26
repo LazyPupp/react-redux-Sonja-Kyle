@@ -1,5 +1,13 @@
 import {createStore} from 'redux';
+import {combineReducers} from 'redux';
 
 import {showModalReducer}  from './reducers/showModalReducer';
+import {gameReducer} from './reducers/gameReducer';
 
-export default createStore(showModalReducer);
+
+const reducer = combineReducers({
+    header: showModalReducer,
+    game: gameReducer,
+});
+
+export default createStore(reducer);
