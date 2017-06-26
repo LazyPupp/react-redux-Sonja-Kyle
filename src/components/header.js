@@ -30,7 +30,7 @@ export class Header extends React.Component  {
     }
 };
 const mapStateToProps = (state,props)=>({
-  showModal:state.showModal
+  showModal:state.header.showModal
 });
 
 export default connect(mapStateToProps)(Header);

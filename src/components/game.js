@@ -5,22 +5,26 @@ import GuessSection from './guess-section';
 import GuessCount  from './guess-count';
 import GuessList from './guess-list';
 
-export default class Game extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            guesses: [],
-            feedback: 'Make your guess!',
-            correctAnswer: Math.floor(Math.random() * 100) + 1,
-        };
-    }
+import {newGame, makeGuess} from '../actions/gameAction';
+import {connect} from 'react-redux';
+
+export class Game extends React.Component {
+    // constructor(props) {
+    //     super(props);
+    //     this.state = {
+    //         guesses: [],
+    //         feedback: 'Make your guess!',
+    //         correctAnswer: Math.floor(Math.random() * 100) + 1,
+    //     };
+    // }
 
     newGame() {
-        this.setState({
-            guesses: [],
-            feedback: 'Make your guess!',
-            correctAnswer: Math.floor(Math.random() * 100) + 1,
-        });
+        this.props.dispatch(newGame());
+        // this.setState({
+        //     guesses: [],
+        //     feedback: 'Make your guess!',
+        //     correctAnswer: Math.floor(Math.random() * 100) + 1,
+        // });
     }
 
     guess(guess) {
@@ -32,7 +36,7 @@ export default class Game extends React.Component {
             return;
         }
 
-        const difference = Math.abs(guess - this.state.correctAnswer);
+        const difference = Math.abs(guess - this.props.correctAnswer);
 
         let feedback;
         if (difference >= 50) {
@@ -51,22 +55,33 @@ export default class Game extends React.Component {
             feedback = 'You got it!';
         }
 
-        this.setState({
-            feedback,
-            guesses: [...this.state.guesses, guess]
-        });
+
+        this.props.dispatch(makeGuess(guess, feedback));
+        // this.setState({
+        //     feedback,
+        //     guesses: [...this.state.guesses, guess]
+        // });
     }
 
     render() {
+        console.log(this.props);
         return (
             <div>
                 <Header onNewGame={() => this.newGame()}/>
-                <GuessSection feedback={this.state.feedback}
+                <GuessSection feedback={this.props.feedback}
                     onGuess={(guess) => this.guess(guess)} />
-                <GuessCount count={this.state.guesses.length} />
-                <GuessList guesses={this.state.guesses} />
+                <GuessCount count={this.props.guesses.length} />
+                <GuessList guesses={this.props.guesses} />
             </div>
         );
     }
-}
+};
+
+const mapStateToProps = (state,props)=>({
+    guesses:state.game.guesses,
+    feedback:state.game.feedback,
+    correctAnswer:state.game.correctAnswer
+});
+
+export default connect(mapStateToProps)(Game);
 
