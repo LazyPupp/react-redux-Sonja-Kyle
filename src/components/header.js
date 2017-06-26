@@ -3,25 +3,19 @@ import React from 'react';
 import TopNav from './top-nav';
 import InfoModal from './info-modal';
 
+import {showModal} from '../actions/showModalAction';
+import {connect} from 'react-redux';
+
 import './header.css';
 
-export default class Header extends React.Component  {
-    constructor(props) {
-        super(props);
-        this.state = {
-            showInfoModal: false
-        };
-    }
-
+export class Header extends React.Component  {
     toggleInfoModal() {
-        this.setState({
-            showInfoModal: !this.state.showInfoModal
-        });
+      this.props.dispatch(showModal());
     }
 
     render() {
         let infoModal;
-        if (this.state.showInfoModal) {
+        if (this.props.showModal) {
             infoModal = <InfoModal onClose={() => this.toggleInfoModal()} />;
         }
 
@@ -35,3 +29,8 @@ export default class Header extends React.Component  {
         );
     }
 };
+const mapStateToProps = (state,props)=>({
+  showModal:state.showModal
+});
+
+export default connect(mapStateToProps)(Header);
