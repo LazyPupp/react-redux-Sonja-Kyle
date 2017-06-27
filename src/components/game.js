@@ -30,9 +30,7 @@ export class Game extends React.Component {
     guess(guess) {
         guess = parseInt(guess, 10);
         if (isNaN(guess)) {
-            this.setState({
-                feedback: 'Please enter a valid number'
-            });
+            this.props.dispatch(makeGuess(null,'Please enter a valid number'));
             return;
         }
 
